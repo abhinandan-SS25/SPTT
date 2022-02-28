@@ -28,6 +28,12 @@ Your saved work will be present each time you open your main page.
 Use the editor to edit your work.
 WORK ON! :D
 
+- PRE-REQUISITES
+
+  - Python 3.10 or higher
+  - Required modules
+    - The requirements.txt file needs to be intalled using pip, before use. To do so, open up a terminal window and type, pip install -r requirements.txt.
+    
 - FUNDAMENTALS
   
   - GENERAL OVERVIEW OF ALL OBJECTS: 
@@ -102,6 +108,15 @@ problem I faced was that every time I backed from a frame, all the images I had
 used for the frame disappeared. Tkinter was automatically deleting them to 
 prevent memory loss. So, I had to add a reference to the image, so that this 
 doesn’t happen.
+
+Another problem I ran into, was the fact that I was using "localhost" as server for mySQL,
+which presented a problem, that my application would not work, in any other system 
+other than my native one. To remedy this, I opened up the port used by mySQL, 
+to allow remote connections to it, and created a user with remote access priviledges 
+to the database. This effectively resulted in the dissolution of the requirement 
+of a local physical server, enabling opration of the application, after 
+intalling the pre-requisites, in other machines.
+
 
  Finally, after so much hard-work and toil, I was presented with the fully 
 functional app, and the joy that rushed over me was indescribable. The 
