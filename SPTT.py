@@ -1,6 +1,6 @@
 #Importing required libraries
 from tkinter import *
-from mysql.connector import *
+from mysql.connector import connect
 from tkinter.font import *
 import speech_recognition as sr 
 import os 
@@ -14,6 +14,7 @@ from PIL import Image, ImageTk
 
 
 USERNAME=[""] #to remember login username
+working_directory = Path.cwd() #accessing current working directory
 
 #creating functions
 #configuration for hover on buttons
@@ -42,7 +43,7 @@ def login_check(un,pas):
         loginerror["fg"]="red"
         loginerror["text"]="PLEASE PROVIDE YOUR CREDENTIALS"
         return#return used to break out of function
-    myDB=connect(host="localhost",user="root",password="a1289141144114", database="sptt1")
+    myDB=connect(host="192.168.1.8",user="AbhiSS01",password="Abhi.128914114411425010304", database="sptt1")
     cursor=myDB.cursor()
     cursor.execute("SELECT name,username,password FROM userdata;")
     data=cursor.fetchall()
@@ -97,12 +98,13 @@ def back_mainpg():
     del_entry(seconds)
     homeframe.tkraise()
     
-#seup main page
+#setup main page
 def prepare_main():
     mainconsole.insert(END,"WELCOME TO SPTT\nThe app uses google speech to text for converting speech to text.\nAnything written, will not be saved if you press back before saving.\nPlease specify the no. of seconds you would like to record for conversion in the entry provided below he console. \nUse RECORD button to record your voice which you want to covert to text.\n Use RECOGNIZE button to convert to text.\nThere maybe issues with recognition and this is not fullproof and may have some delays for execution.\n\n\n")
     #open user file(for retrieving previous save) if any
     try:
-        wf=open("C:\\Users\\abhin\\OneDrive\\Desktop\\SPTT\\users\\"+USERNAME[0]+"\\"+USERNAME[0]+".txt","r")
+        ut = USERNAME[0] + ".txt"
+        wf=open(working_directory / "users" / USERNAME[0] / ut,"r")
     except:
         return
     #retrieve data for user
@@ -112,7 +114,8 @@ def prepare_main():
 #save function for main
 def save():
     data=maineditor.get(1.0,END)
-    sf=open("C:\\Users\\abhin\\OneDrive\\Desktop\\SPTT\\users\\"+USERNAME[0]+"\\"+USERNAME[0]+".txt","w")
+    ut = USERNAME[0] + ".txt"
+    sf=open(working_directory / "users" / USERNAME[0] / ut,"w")
     sf.write(data)
     sf.close()
     mainconsole.insert(END,"Saved successfully\n")
@@ -125,14 +128,14 @@ def signup_check(n,un,pas,cpass):
         signuperror["text"]="PLEASE PROVIDE YOUR CREDENTIALS"
         return
     #create new folder for user using username
-    if not os.path.isdir("C:\\Users\\abhin\\OneDrive\\Desktop\\SPTT\\users\\"+un):
-        os.mkdir("C:\\Users\\abhin\\OneDrive\\Desktop\\SPTT\\users\\"+un)
+    if not os.path.isdir(working_directory / "users" / un):
+        os.mkdir(working_directory / "users" / un)
     #error handle
     if pas!=cpass:
         signuperror["fg"]="red"
         signuperror["text"]="THE PASSWORDS DO NOT MATCH"
         return 
-    myDB=connect(host="localhost",user="root",password="a1289141144114", database="sptt1")
+    myDB=connect(host="192.168.1.8",user="AbhiSS01",password="Abhi.128914114411425010304", database="sptt1")
     cursor=myDB.cursor()
     cursor.execute("SELECT name,username,password FROM userdata;")
     data=cursor.fetchall()
@@ -170,7 +173,7 @@ def get_large_audio_transcription(path):
         # keep the silence for 1 second, adjustable as well
         keep_silence=500,
     )
-    folder_name = "C:\\Users\\abhin\\OneDrive\\Desktop\\SPTT\\users\\"+USERNAME[0]+"\\audio-chunks"
+    folder_name = working_directory / "users" / USERNAME[0] / "audio-chunks"
     # create a directory to store the audio chunks
     if not os.path.isdir(folder_name):
         os.mkdir(folder_name)
@@ -204,7 +207,7 @@ def start_rec(s):
     RATE = 44100 # Sample Rate
     CHUNK = 9024 # Block Size
     RECORD_SECONDS = s # Record time as provided
-    WAVE_OUTPUT_FILENAME = "C:\\Users\\abhin\\OneDrive\\Desktop\\SPTT\\users\\"+USERNAME[0]+"\\file.wav"
+    WAVE_OUTPUT_FILENAME = str(working_directory / "users" / USERNAME[0] / "file.wav")
 
     # Startup pyaudio instance
     audio = pyaudio.PyAudio()
@@ -254,7 +257,7 @@ homecanvas=Canvas(homeframe,
                   bd=0,
                   highlightthickness=0,relief="ridge")
 homecanvas.place(x=0,y=0)
-homeback=PhotoImage(file="C:\\Users\\abhin\\OneDrive\\Desktop\\SPTT\\assets\\home.png")
+homeback=PhotoImage(file=working_directory / "assets" / "home.png")
 home=homecanvas.create_image(576.0,
                              350.0,image=homeback)
 homecanvas.homeback=homeback
@@ -338,7 +341,7 @@ logincanvas=Canvas(loginframe,
                   bd=0,
                   highlightthickness=0,relief="ridge")
 logincanvas.place(x=0,y=0)
-loginback=PhotoImage(file="C:\\Users\\abhin\\OneDrive\\Desktop\\SPTT\\assets\\login.png")
+loginback=PhotoImage(file=working_directory / "assets" / "login.png")
 login=logincanvas.create_image(576.0,
                              350.0,image=loginback)
 logincanvas.loginback=loginback
@@ -461,7 +464,7 @@ signupcanvas=Canvas(signupframe,
                   bd=0,
                   highlightthickness=0,relief="ridge")
 signupcanvas.place(x=0,y=0)
-signupback=PhotoImage(file="C:\\Users\\abhin\\OneDrive\\Desktop\\SPTT\\assets\\signup.png")
+signupback=PhotoImage(file=working_directory / "assets" / "signup.png")
 signup=signupcanvas.create_image(576.0,
                              350.0,image=signupback)
 signupcanvas.signupback=signupback
@@ -602,7 +605,7 @@ maincanvas = Canvas(
 
 maincanvas.place(x = 0, y = 0)
 mainback = PhotoImage(
-    file="C:\\Users\\abhin\\OneDrive\\Desktop\\SPTT\\assets\\main.png")
+    file=working_directory / "assets" / "main.png")
 main = maincanvas.create_image(
     576.0,
     350.0,
@@ -672,7 +675,7 @@ RECORD.bind('<Enter>', on_enter)
 RECORD.bind('<Leave>', on_exit_main)
 
 RECOGNIZE=Button(mainframe, 
-                command=lambda: maineditor.insert(END,get_large_audio_transcription("C:\\Users\\abhin\\OneDrive\\Desktop\\SPTT\\users\\"+USERNAME[0]+"\\file.wav")),
+                command=lambda: maineditor.insert(END,get_large_audio_transcription(working_directory / "users" / USERNAME[0] / "file.wav")),
                 borderwidth=0,
                 highlightthickness=5,
                 bg="#596065",
